@@ -19,6 +19,7 @@
 
   const type = writablePersistentStore("SelectProject.type", "id");
   console.log(type, $type);
+  $type='file'
   const projectId = writablePersistentStore(
     "SelectProject.id",
     defaultProjectId
@@ -33,10 +34,10 @@
     $projectId = projectIdInURL;
   }
 
-  setInterval(() => {
-    // if(typeof $type!=='undefined')
-    // console.log($type,$type)
-  }, 1000);
+  // setInterval(() => {
+  //   // if(typeof $type!=='undefined')
+  //   // console.log($type,$type)
+  // }, 1000);
 
   let isImportingProject = false;
   importExternalProject({
@@ -205,6 +206,12 @@
       project = await (
         await loadProject.fromURL(url, progressCallback)
       ).promise;
+    } else if ($type === "post") {
+      uniqueId = `${Math.random()}`;
+      projectTitle = "40code作品";
+      project = await (
+        await loadProject.fromFile(window.postData, progressCallback)
+      ).promise;
     } else {
       throw new Error("Unknown type");
     }
@@ -222,6 +229,10 @@
     projectData = await task.do(internalLoad(task));
     task.done();
   };
+  window.loadFromPostMessage = (e) => {
+    $type = "post";
+    load();
+  };
 </script>
 
 {#if isImportingProject}
@@ -234,7 +245,7 @@
 
 <center
   ><DropArea on:drop={handleDrop}>
-    <mdui-card variant="filled" accent="#4C97FF">
+    <mdui-card variant="filled" accent="#4C97FF" style={$type == "post" && projectData?'display:none':''}>
       <h2>{$_("select.select")}</h2>
       <p>{$_("select.selectHelp")}</p>
 
@@ -275,9 +286,9 @@
           {/if}
         </mdui-radio>
       </mdui-radio-group> -->
-      
-      <div class="options">
-        <!-- <div class="option">
+      {#if $type !== "post"}
+        <div class="options">
+          <!-- <div class="option">
           <label>
             <input
               type="radio"
@@ -298,46 +309,47 @@
             />
           {/if}
         </div> -->
-        <!-- TurboWarp Desktop looks for the file-input-option class for special handling, so be careful when modifying this. -->
-        <div class="option file-input-option">
-          <label>
+          <!-- TurboWarp Desktop looks for the file-input-option class for special handling, so be careful when modifying this. -->
+          <div class="option file-input-option">
+            <label>
+              <input
+                type="radio"
+                name="project-type"
+                bind:group={$type}
+                value="file"
+              />
+              {$_("select.file")}
+            </label>
             <input
-              type="radio"
-              name="project-type"
-              bind:group={$type}
-              value="file"
+              hidden={$type !== "file"}
+              on:change={handleFileInputChange}
+              bind:this={fileInputElement}
+              type="file"
+              accept=".sb,.sb2,.sb3"
             />
-            {$_("select.file")}
-          </label>
-          <input
-            hidden={$type !== "file"}
-            on:change={handleFileInputChange}
-            bind:this={fileInputElement}
-            type="file"
-            accept=".sb,.sb2,.sb3"
-          />
+          </div>
+          <div class="option">
+            <label>
+              <input
+                type="radio"
+                name="project-type"
+                bind:group={$type}
+                value="url"
+              />
+              {$_("select.url")}
+            </label>
+            {#if $type === "url"}
+              <input
+                type="text"
+                bind:value={$projectUrl}
+                spellcheck="false"
+                placeholder="https://..."
+                on:keypress={submitOnEnter}
+              />
+            {/if}
+          </div>
         </div>
-        <div class="option">
-          <label>
-            <input
-              type="radio"
-              name="project-type"
-              bind:group={$type}
-              value="url"
-            />
-            {$_("select.url")}
-          </label>
-          {#if $type === "url"}
-            <input
-              type="text"
-              bind:value={$projectUrl}
-              spellcheck="false"
-              placeholder="https://..."
-              on:keypress={submitOnEnter}
-            />
-          {/if}
-        </div>
-      </div>
+      {/if}
 
       {#if $type === "id"}
         <p>

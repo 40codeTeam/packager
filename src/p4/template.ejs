@@ -36,7 +36,7 @@
       }
       mdui-card {
         padding: 15px;
-        width: min(725px, 1vw);
+        width: min(725px, calc(100vw - 10px));
       }
     </style>
   </head>
@@ -76,6 +76,16 @@
 
         console.log(theme);
       })();
+      window.opener.postMessage({ message: "start" }, "*");
+      let m=function (e) {
+        console.log(e)
+        if(typeof e.data=='object' && e.data.size && e.origin!=window.origin){
+          window.postData = e.data;
+          window.loadFromPostMessage();
+          removeEventListener('message',m)
+        }
+      }
+      window.addEventListener("message", m);
     </script>
   </body>
 </html>
