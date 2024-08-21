@@ -51,7 +51,7 @@
 </script>
 
 <style>
-  :root {
+  /* :root {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     background: white;
     color: black;
@@ -109,11 +109,11 @@
   }
   main {
     padding-bottom: 10px;
-  }
+  } */
   footer {
     text-align: center;
   }
-  footer > div {
+  /* footer > div {
     margin-top: 12px;
   }
   .disclaimer {
@@ -125,7 +125,7 @@
   }
   .version a {
     color: inherit;
-  }
+  } */
 </style>
 
 <Modals bind:modalVisible={modalVisible} />
@@ -143,7 +143,7 @@
         </p>
       {/if}
       <p>{$_('p4.description1')}</p>
-      <p>
+      <!-- <p>
         <ComplexMessage
           message={$_('p4.description2')}
           values={{
@@ -172,7 +172,7 @@
       </p>
       <p class="disclaimer">
         {$_('p4.disclaimer')}
-      </p>
+      </p> -->
     </div>
   </Section>
 
@@ -217,27 +217,7 @@
   {/if}
 
   <footer>
-    <div>
-      {#if PRIVACY_POLICY && !isStandalone}
-        <a href={PRIVACY_POLICY}>{$_('p4.privacy')}</a>
-        <span> - </span>
-      {/if}
-      <a href={FEEDBACK_PRIMARY.link}>{$_('p4.feedback')}</a>
-      {#if SOURCE_CODE}
-        <span> - </span>
-        <a href={SOURCE_CODE}>{$_('p4.sourceCode')}</a>
-      {/if}
-      {#if DONATE}
-        <!-- Donation link needs to be wrapped in another element so we can hide it in the Mac App Store -->
-        <span class="donate-link">
-          <span> - </span>
-          <a href={DONATE}>{$_('p4.donate')}</a>
-        </span>
-      {/if}
-    </div>
-    <div>
-      <a href="https://docs.turbowarp.org/packager">{$_('p4.documentation')}</a>
-    </div>
+
     <div>
       <SelectTheme />
     </div>

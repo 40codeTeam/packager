@@ -1,37 +1,80 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <% const {APP_NAME} = require('../packager/brand.js'); %>
-    <title><%= APP_NAME %> - Convert Scratch projects to HTML, EXE, and more</title>
-    <meta name="description" content="Converts Scratch 3, 2, or 1 projects into HTML files, zip archives, or executable programs for Windows, macOS, and Linux. Faster and more customizable than HTMLifier and forkphorus.">
+    <title>
+      <%= APP_NAME %> - Convert Scratch projects to HTML, EXE, and more
+    </title>
+    <meta
+      name="description"
+      content="Converts Scratch 3, 2, or 1 projects into HTML files, zip archives, or executable programs for Windows, macOS, and Linux. Faster and more customizable than HTMLifier and forkphorus."
+    />
+    <link rel="stylesheet" href="https://unpkg.com/mdui@2/mdui.css" />
+    <script src="https://unpkg.com/mdui@2/mdui.global.js"></script>
+    <script>
+      // mdui.setColorScheme("#0061a4");
+    </script>
     <style>
-      body[p4-splash-theme="dark"]:not([p4-loaded]) {
+      /* body[p4-splash-theme="dark"]:not([p4-loaded]) {
         background-color: #111;
         color-scheme: dark;
+      } */
+      /* 修改 primary 的颜色值 */
+      :root {
+        --mdui-color-primary-light: 103, 80, 164;
+        --mdui-color-primary-dark: 208, 188, 255;
+      }
+
+      /* 把 foo 元素的背景色设置为 primary */
+      .foo {
+        background-color: rgb(var(--mdui-color-primary));
       }
       .input-for-remembering-project-file {
         display: none;
       }
+      mdui-card {
+        padding: 15px;
+        width: min(725px, 1vw);
+      }
     </style>
   </head>
-  <body>
+  <body class="mdui-prose">
     <noscript>This page requires JavaScript.</noscript>
     <!-- This element needs to exist in the HTML for some browsers to autocomplete it. -->
-    <input type="file" class="input-for-remembering-project-file" autocomplete="on">
+    <input
+      type="file"
+      class="input-for-remembering-project-file"
+      autocomplete="on"
+    />
     <div id="app"></div>
     <script>
-      (function() {
+      (function () {
         // This logic is only for the "splash" screen.
         // It's used to prevent a momentary white screen while the page is loading in dark mode.
-        var theme = 'system';
+        var theme = "system";
         try {
-          var local = localStorage.getItem('P4.theme')
-          if (typeof local === 'string') theme = local;
-        } catch (e) { /* ignore */ }
-        if (theme === 'system') theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        document.body.setAttribute('p4-splash-theme', theme);
+          var local = localStorage.getItem("P4.theme");
+          if (typeof local === "string") theme = local;
+        } catch (e) {
+          /* ignore */
+        }
+        document
+          .getElementsByTagName("html")[0]
+          .setAttribute("class", "mdui-theme-" + theme);
+        if (theme === "system") {
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+          document
+            .getElementsByTagName("html")[0]
+            .setAttribute("class", "mdui-theme-auto");
+        }
+
+        document.body.setAttribute("p4-splash-theme", theme);
+
+        console.log(theme);
       })();
     </script>
   </body>

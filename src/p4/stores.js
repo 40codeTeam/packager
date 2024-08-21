@@ -53,8 +53,10 @@ theme.subscribe((value) => {
   try {
     if (value === 'system') {
       localStorage.removeItem(THEME_KEY);
+      document.getElementsByTagName('html')[0].setAttribute("class", 'mdui-theme-auto');
     } else {
       localStorage.setItem(THEME_KEY, value);
+      document.getElementsByTagName('html')[0].setAttribute("class", 'mdui-theme-'+value);
     }
   } catch (e) {
     // ignore
